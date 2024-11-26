@@ -11,6 +11,7 @@ The overall flowchart of gmps_localizer is decribed at the end of this document.
 
 ## Requirements
 - [gmps_msgs](https://github.com/aichisteel-gmps/gmps_msgs)
+- [autoware_auto_vehicle_msgs](https://github.com/tier4/autoware_auto_msgs/)
 
 ## Features
 This package includes the following features:
@@ -43,7 +44,7 @@ The parameters and input topic names can be set in the `gmps_localizer.launch.xm
 - in_rfid (gmps_msgs/Rfid)  
   RFID tag number written in EPC frame.
 
-- in_velocity (geometry_msgs/TwistWithCovarianceStamped)  
+- in_velocity (autoware_auto_vehicle_msgs/VelocityReport)  
   Vehicle speed.
 
 ### Published Topics
