@@ -10,6 +10,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(gmps_msgs REQUIRED) 
 find_package(geometry_msgs REQUIRED)
+find_package(autoware_auto_vehicle_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2 REQUIRED)
 
@@ -22,6 +23,7 @@ ament_target_dependencies(gmps_localizer
  std_msgs
  gmps_msgs
  geometry_msgs
+ autoware_auto_vehicle_msgs
  tf2_ros
  tf2) 
 

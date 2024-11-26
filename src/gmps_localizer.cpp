@@ -8,7 +8,8 @@
 #include <tf2/utils.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp> 	//in out pose
-#include <geometry_msgs/msg/twist_with_covariance_stamped.hpp> 	//in velocity
+//#include <geometry_msgs/msg/twist_with_covariance_stamped.hpp>  //in speed
+#include <autoware_auto_vehicle_msgs/msg/velocity_report.hpp> // in speed, autoware
 #include "gmps_msgs/msg/gmps_detect.hpp"                        //in gmps detect
 #include "gmps_msgs/msg/gmps_log.hpp"                           //out gmps log
 #include "gmps_msgs/msg/rfid.hpp"                               //in rfid
@@ -66,7 +67,7 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr sub_prev_pose_;
     rclcpp::Subscription<gmps_msgs::msg::GmpsDetect>::SharedPtr sub_gmps_detect_;
     rclcpp::Subscription<gmps_msgs::msg::Rfid>::SharedPtr sub_rfid_;
-    rclcpp::Subscription<geometry_msgs::msg::TwistWithCovarianceStamped>::SharedPtr sub_velocity_;
+    rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::VelocityReport>::SharedPtr sub_velocity_;
     /* Timer */
     rclcpp::TimerBase::SharedPtr timer_;
     /* tf */
@@ -126,9 +127,9 @@ private:
     float y_predict_marker_;
     float mm_dist_;
 
-    void callbackVelocity(const geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr msg)
+    void callbackVelocity(const autoware_auto_vehicle_msgs::msg::VelocityReport::SharedPtr msg)
     {
-        vx_mps_ = msg->twist.twist.linear.x;
+        vx_mps_ = msg->longitudinal_velocity;
     }
 
     //走行距離の更新。粗めの周期で更新しておき、RFIDかGMPSを検知したタイミングで都度更新する。
@@ -860,7 +861,7 @@ public:
             "in_gmps_detect", rclcpp::SensorDataQoS(), std::bind(&GMPSLocalizer::callbackDetect, this, std::placeholders::_1));
         sub_rfid_ = this->create_subscription<gmps_msgs::msg::Rfid>(
             "in_rfid", rclcpp::SensorDataQoS(), std::bind(&GMPSLocalizer::callbackRfid, this, std::placeholders::_1));
-        sub_velocity_ = this->create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
+        sub_velocity_ = this->create_subscription<autoware_auto_vehicle_msgs::msg::VelocityReport>(
             "in_velocity", rclcpp::QoS(1), std::bind(&GMPSLocalizer::callbackVelocity, this, std::placeholders::_1));
         tf_br_ = std::make_shared<tf2_ros::TransformBroadcaster>(
             std::shared_ptr<rclcpp::Node>(this, [](auto) {}));
